@@ -1,0 +1,90 @@
+.App {
+  text-align: center;
+  height: 1200px;
+  background-color: #454545
+}
+
+.Content{
+  text-align: center;
+  margin: auto;
+  width: 90%;
+  border: 1px solid black;
+  height: 100%;
+  background-color: white;
+}
+
+.App-logo {
+  height: 40px;
+  float: left;
+  padding-right: 10px;
+  padding-top: 2px;
+}
+
+.App-header {
+  background-color: black;
+  height: 50px;
+  color: white;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.App-title {
+  font-size: 3em;
+  margin: 0 0 0 0;
+}
+
+.Card-main {
+  padding: .2em;
+  border: solid 3px #5a8114;
+  width: 50%;
+  margin: auto;
+  height: 60px;
+  display: block;
+  margin-top: 5px;
+  overflow: none;
+  border-radius: 10px;
+}
+
+.Card-route{
+  font-size: 1.5em;
+  text-align: left;
+  margin-left: .3em;
+  margin-top: .2em;
+}
+
+.Card-stop{
+  font-size: .8em;
+  margin: 0 0 0 0;
+  text-align: left;
+  margin-left: .3em;
+}
+
+.Card-agency{
+  font-size: .5em;
+  margin: 0 0 0 0;
+  text-align: left;
+  margin-left: .3em;
+}
+
+.Card-time{
+  font-size: 1.5em;
+  margin-top: .4em;
+}
+
+.Card-time-unit{
+  font-size: .5em;
+}
+
+.Col-left{
+  float: left;
+  width: 80%;
+}
+
+.Col-right{
+  float: right;
+  width: 15%;
+}
+
+.App-intro {
+  font-size: large;
+}
