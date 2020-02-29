@@ -46,7 +46,6 @@ class Home extends Component {
   }
 
   render() {
-    console.log(this.props.reduxState);
     return (
       <div className="App">
         <div className="Content">
