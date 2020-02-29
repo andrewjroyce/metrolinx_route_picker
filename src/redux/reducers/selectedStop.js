@@ -1,6 +1,4 @@
-import {
-  SET_CURRENT_STOP,
-} from '../types';
+import { SET_CURRENT_STOP } from "../types";
 
 export default function selectedStop(state = "", action) {
   switch (action.type) {

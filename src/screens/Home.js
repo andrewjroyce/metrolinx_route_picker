@@ -1,140 +1,52 @@
-import React, {Component} from 'react';
-import logo from '../logo.svg';
-import Select from '@material-ui/core/Select';
-import {connect} from 'react-redux';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  selectedRoute,
-  selectStop,
-  routeFetch,
-  selectDirection
-} from '../redux/actions';
-import Input from '@material-ui/core/Input';
-import PredictionBox from '../components/PredictionBox';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import _ from 'lodash';
+import React, { Component } from "react";
+import logo from "../logo.svg";
+import Select from "@material-ui/core/Select";
+import { connect } from "react-redux";
+import MenuItem from "@material-ui/core/MenuItem";
+import { setRoute, setStop, routeFetch, setDirection } from "../redux/actions";
+import Input from "@material-ui/core/Input";
+import PredictionBox from "../components/PredictionBox";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import _ from "lodash";
+import Line from "../components/Line";
+import Direction from "../components/Direction";
+import Stop from "../components/Stop";
 
 class Home extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      route: '',
-      stop: '',
-      direction: ''
+      stop: ""
     };
   }
-
-  handleChange = event => {
-    this.setState({
-      route: event.target.value
-    });
-    this.props.selectedRoute(event.target.value);
-    this.props.routeFetch(event.target.value);
-  };
-
-  handleDirectionChange = event => {
-    this.setState({
-      direction: event.target.value
-    });
-    if (this.props.reduxState.currentRouteReducer.direction.length === 2) {
-      if (event.target.value === 'North') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[1]
-        );
-      }
-      if (event.target.value === 'East') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[1]
-        );
-      }
-      if (event.target.value === 'South') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[0]
-        );
-      }
-      if (event.target.value === 'West') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[0]
-        );
-      }
-    }
-    if (this.props.reduxState.currentRouteReducer.direction.length === 4) {
-      if (event.target.value === 'North') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[1]
-        );
-      }
-      if (event.target.value === 'East') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[1]
-        );
-      }
-      if (event.target.value === 'South') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[0]
-        );
-      }
-      if (event.target.value === 'West') {
-        this.props.selectDirection(
-          this.props.reduxState.currentRouteReducer.direction[0]
-        );
-      }
-    }
-  };
 
   handleCurrentRouteChange = event => {
     this.setState({
       stop: event.target.value
     });
-    this.props.selectStop(
+    this.props.setStop(
       this.props.reduxState.currentRouteReducer.tag,
       event.target.value
     );
   };
 
-  renderRouteMenuItems() {
-    return this.props.reduxState.routeData.map(route => {
-      return (
-        <MenuItem key={route.tag} value={route.tag}>
-          {route.title}
-        </MenuItem>
-      );
-    });
-  }
-  renderDirectionMenuItems() {
-    return this.props.reduxState.currentRouteReducer.direction.map(
-      (route, i) => {
-        return (
-          <MenuItem key={route.tag} input={i} value={route.name}>
-            {route.title}
-          </MenuItem>
-        );
-      }
+  renderPrediction() {
+    return (
+      this.props.reduxState.selectedStop && (
+        <PredictionBox
+          predictions={
+            this.props.reduxState.selectedStop
+              ? this.props.reduxState.selectedStop
+              : this.props.reduxState.stopPrediction.predictions
+          }
+        />
+      )
     );
   }
 
-  renderStopMenuItems() {
-    let directionStopsNoTags = this.props.reduxState.selectDirection.payload
-      .stop;
-    let allStopsNoDirection = this.props.reduxState.currentRouteReducer.stop;
-
-    var filteredStops = _(allStopsNoDirection)
-      .differenceBy(directionStopsNoTags, 'tag')
-      .map(_.partial(_.pick, _, 'tag', 'title'))
-      .value();
-
-    return filteredStops.map(stop => {
-      return (
-        <MenuItem key={stop.tag} value={stop.tag}>
-          {stop.title}
-        </MenuItem>
-      );
-    });
-  }
-
   render() {
+    console.log(this.props.reduxState);
     return (
       <div className="App">
         <div className="Content">
@@ -143,62 +55,24 @@ class Home extends Component {
             <h1 className="App-title">METROLINX</h1>
           </header>
           <p className="App-intro">
-            {this.state.route === ''
-              ? 'To begin, choose your Route'
-              : this.state.direction === ''
-              ? 'Next Choose your direction'
-              : this.state.stop === ''
-              ? 'Finally Choose your Stop'
+            {this.props.reduxState.selectedRoute === ""
+              ? "To begin, choose your Route"
+              : this.props.reduxState.selectedDirection === ""
+              ? "Next Choose your direction"
+              : this.props.reduxState.selectedStop === ""
+              ? "Finally Choose your Stop"
               : null}
           </p>
-          <FormControl>
-            <Select
-              onChange={this.handleChange}
-              value={this.state.route}
-              inputProps={{name: 'route', id: 'route-simple'}}
-            >
-              {this.renderRouteMenuItems()}
-            </Select>
-            <FormHelperText>Line</FormHelperText>
-          </FormControl>
-          {this.props.reduxState.currentRouteReducer ? (
-            <FormControl>
-              <Select
-                onChange={this.handleDirectionChange}
-                input={<Input id="select-direction" />}
-                value={this.state.direction}
-                inputProps={{name: 'direction', id: 'direction-simple'}}
-              >
-                >{this.renderDirectionMenuItems()}
-              </Select>
-              <FormHelperText>Direction</FormHelperText>
-            </FormControl>
-          ) : null}
+          <Line />
           <br />
-          {this.props.reduxState.selectDirection.payload ? (
-            <FormControl>
-              <Select
-                onChange={this.handleCurrentRouteChange}
-                value={this.state.stop}
-                inputProps={{name: 'stop', id: 'stop-simple'}}
-              >
-                {this.props.reduxState.selectDirection.payload
-                  ? this.renderStopMenuItems()
-                  : null}
-              </Select>
-              <FormHelperText>Stop</FormHelperText>
-            </FormControl>
-          ) : null}
+          <Direction />
           <br />
-          {this.props.reduxState.selectedStop ? (
-            <PredictionBox
-              predictions={
-                this.props.reduxState.selectedStop
-                  ? this.props.reduxState.selectedStop
-                  : this.props.reduxState.stopPrediction.predictions
-              }
-            />
-          ) : null}
+          <Stop
+            stop={this.state.stop}
+            handleCurrentRouteChange={this.handleCurrentRouteChange}
+          />
+          <br />
+          {this.renderPrediction()}
         </div>
       </div>
     );
@@ -213,7 +87,9 @@ const mapStateToProps = state => ({
 //     selectedRoute: (text) => { dispatch({ type: 'SELECT_ROUTE', payload: text})},
 //   })
 
-export default connect(
-  mapStateToProps,
-  {routeFetch, selectStop, selectedRoute, selectDirection}
-)(Home);
+export default connect(mapStateToProps, {
+  routeFetch,
+  setStop,
+  setRoute,
+  setDirection
+})(Home);

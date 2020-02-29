@@ -1,6 +1,4 @@
-import {
-  SET_CURRENT_STOP,
-} from '../types';
+import { SET_CURRENT_STOP } from "../types";
 
 export default function stopPrediction(state = null, action) {
   switch (action.type) {
